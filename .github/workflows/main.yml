@@ -23,7 +23,7 @@ jobs:
         # Sửa "MyProject/fingerprint.ino" cho đúng đường dẫn file bạn upload
         run: |
           arduino-cli core install arduino:avr
-          arduino-cli compile --fqbn arduino:avr:uno MyProject/fingerprint.ino --output-dir ./build_output
+          arduino-cli compile --fqbn arduino:avr:uno MyProject/MyProject.ino --output-dir ./build_output
 
       - name: Upload Result
         uses: actions/upload-artifact@v4
