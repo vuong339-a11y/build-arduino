@@ -1,0 +1,32 @@
+name: Build_Arduino_Fingerprint
+
+on: [push, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Arduino CLI
+        uses: arduino/setup-arduino-cli@v1
+
+      - name: Install Libraries
+        # Lệnh này tự động tải các thư viện bạn cần từ "chợ" Arduino
+        run: |
+          arduino-cli lib install "Adafruit Fingerprint Sensor Library"
+          arduino-cli lib install "IRremote"
+          # SoftwareSerial và EEPROM thường đi kèm sẵn với core AVR
+
+      - name: Compile Code (Uno R3)
+        # Sửa "MyProject/fingerprint.ino" cho đúng đường dẫn file bạn upload
+        run: |
+          arduino-cli core install arduino:avr
+          arduino-cli compile --fqbn arduino:avr:uno MyProject/fingerprint.ino --output-dir ./build_output
+
+      - name: Upload Result
+        uses: actions/upload-artifact@v4
+        with:
+          name: Firmware_Uno_R3
+          path: ./build_output/*.hex
